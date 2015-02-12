@@ -56,6 +56,7 @@ always_enabled_cmd_files = \
 	cmd_peekpoke.c \
 	cmd_pod.c \
 	cmd_readmem.c \
+	cmd_readnand.c \
 	cmd_writemem.c \
 	cmd_writenand.c \
 	cmd_flashmem.c \

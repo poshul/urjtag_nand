@@ -37,7 +37,8 @@ libbus_la_SOURCES = \
 	writenand.h \
 	writenand.c \
 	nand_ecc.c \
-	nand_ecc.h
+	nand_ecc.h \
+	nand_functions.c
 
 if ENABLE_BUS_ARM9TDMI
 libbus_la_SOURCES += arm9tdmi.c
