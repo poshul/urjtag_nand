@@ -21,6 +21,7 @@
 
 include $(top_srcdir)/Makefile.rules
 
+BUILT_SOURCES = svf_bison.h
 AM_YFLAGS = -d
 
 noinst_LTLIBRARIES = \
