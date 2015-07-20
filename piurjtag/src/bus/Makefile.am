@@ -34,10 +34,9 @@ libbus_la_SOURCES = \
 	pxa2x0_mc.h \
 	readmem.c \
 	writemem.c \
-	writenand.h \
 	writenand.c \
 	nand_ecc.c \
-	nand_ecc.h \
+	readnand.c \
 	nand_functions.c
 
 if ENABLE_BUS_ARM9TDMI

@@ -42,6 +42,8 @@
 //#include <linux/module.h>
 //#include <linux/mtd/nand_ecc.h>
 
+#include <urjtag/nand_ecc.h>
+
 /*
  * Pre-calculated 256-way 1 byte column parity
  */

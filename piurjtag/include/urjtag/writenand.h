@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
-#include "nand_ecc.h" //TODO THIS IS SLOPPY
+#include <urjtag/nand_ecc.h> //TODO THIS IS SLOPPY
 #include <urjtag/log.h>
 #include <urjtag/error.h>
 #include <urjtag/bus.h>

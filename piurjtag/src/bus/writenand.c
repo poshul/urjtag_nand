@@ -34,7 +34,7 @@
 #include <urjtag/bus.h>
 #include <urjtag/flash.h>
 #include <urjtag/jtag.h>
-#include "writenand.h"
+#include <urjtag/writenand.h>
 
 
 //Erase a block, returns 0 if okay and 1 if erase failed.

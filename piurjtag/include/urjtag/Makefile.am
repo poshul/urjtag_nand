@@ -44,6 +44,7 @@ pkginclude_HEADERS = \
 	jim.h \
 	jtag.h \
 	log.h \
+	nand_ecc.h \
 	params.h \
 	parport.h \
 	parse.h \
@@ -51,12 +52,14 @@ pkginclude_HEADERS = \
 	part_instruction.h \
 	pld.h \
 	pod.h \
+	readnand.h \
 	tap_register.h \
 	tap_state.h \
 	tap.h \
 	svf.h \
 	types.h \
-	usbconn.h
+	usbconn.h \
+	writenand.h
 
 nodist_pkginclude_HEADERS = \
 	urjtag.h

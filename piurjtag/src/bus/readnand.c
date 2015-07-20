@@ -38,14 +38,15 @@
 #include <urjtag/bus.h>
 #include <urjtag/flash.h>
 #include <urjtag/jtag.h>
-#include "writenand.h"
+#include <urjtag/writenand.h>
+#include <urjtag/readnand.h>
 
 int
 urj_bus_readnand (urj_bus_t *bus, FILE *f, uint32_t addr, uint32_t len)
 {
     uint32_t step;
     uint64_t a;
-    //size_t bc = 0;
+    size_t bc = 0;
     uint8_t b[BSIZE*PAGEINBLOCK];//we read a block at a time
     urj_bus_area_t area;
     uint64_t end;
@@ -75,9 +76,9 @@ urj_bus_readnand (urj_bus_t *bus, FILE *f, uint32_t addr, uint32_t len)
         return URJ_STATUS_FAIL;
     }
 
-    addr = addr & (~((BSIZE*PAGEINBLOCK) - 1));//start at the beginning of the block
-    len = (len + (BSIZE*PAGEINBLOCK) - 1) & (~((BSIZE*PAGEINBLOCK) - 1)); //read to the end of a block
-
+    addr = (addr/(BSIZE*PAGEINBLOCK))*(BSIZE*PAGEINBLOCK); //& (~((BSIZE*PAGEINBLOCK) - 1));//start at the beginning of the block
+    len = (len/(BSIZE*PAGEINBLOCK))*(BSIZE*PAGEINBLOCK)+(BSIZE*PAGEINBLOCK);//(len + (BSIZE*PAGEINBLOCK) - 1) & (~((BSIZE*PAGEINBLOCK) - 1)); //read to the end of a block
+    //FIXME
     urj_log (URJ_LOG_LEVEL_NORMAL, _("address: 0x%08lX\n"),
              (long unsigned) addr);
     urj_log (URJ_LOG_LEVEL_NORMAL, _("length:  0x%08lX\n"),
@@ -90,17 +91,20 @@ urj_bus_readnand (urj_bus_t *bus, FILE *f, uint32_t addr, uint32_t len)
     }
 
     //a = addr;
-    end = a + len;
+    end = addr + len;
     urj_log (URJ_LOG_LEVEL_NORMAL, _("reading:\n"));
 
     /*if (URJ_BUS_READ_START (bus, addr) != URJ_STATUS_OK)
         return URJ_STATUS_FAIL;
 */
-    for (a=addr; a <= end; a += BSIZE*PAGEINBLOCK)
+    for (a=addr; a < end; a += BSIZE*PAGEINBLOCK)
     {
-        //uint32_t data;
-        //int j;
+    	   urj_log (URJ_LOG_LEVEL_NORMAL, _("reading: 0x%08lX\n"),
+    			   (long unsigned) a );
+        uint32_t data;
+        int j;
     	do_seqread(bus,a,b); //read a block
+
         /*if (a < end)
             data = URJ_BUS_READ_NEXT (bus, a);
         else
@@ -119,7 +123,7 @@ urj_bus_readnand (urj_bus_t *bus, FILE *f, uint32_t addr, uint32_t len)
         {
             urj_log (URJ_LOG_LEVEL_NORMAL, _("addr: 0x%08llX\r"),
                      (long long unsigned) a);
-         */
+        }*/
         if (fwrite (b, BSIZE*PAGEINBLOCK, 1, f) != 1)
         {
         	urj_error_set (URJ_ERROR_FILEIO, "fwrite fails");
@@ -128,6 +132,7 @@ urj_bus_readnand (urj_bus_t *bus, FILE *f, uint32_t addr, uint32_t len)
         	return URJ_STATUS_FAIL;
         }
         //bc = 0;
+
 
     }
 

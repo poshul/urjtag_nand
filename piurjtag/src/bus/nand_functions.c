@@ -5,7 +5,7 @@
  *      Author: samuel
  */
 
-#include "writenand.h"
+#include <urjtag/writenand.h>
 
 
 
@@ -98,19 +98,22 @@ uint32_t do_read2(urj_bus_t *bus,uint32_t addr,uint8_t *b ){
 uint32_t do_seqread(urj_bus_t *bus,uint32_t addr,uint8_t *b ){
 	//TODO detect b too small
 	uint32_t actaddr=addr/BSIZE;
+	urj_log (URJ_LOG_LEVEL_DEBUG, _("\nACTADDR:%x"),(actaddr));
 	URJ_BUS_WRITE (bus, PSEUDOADDRESS+3, READ1S);
 	URJ_BUS_WRITE (bus, PSEUDOADDRESS+5, 00);
-	URJ_BUS_WRITE (bus, PSEUDOADDRESS+5, (actaddr)&255);
-	urj_log (URJ_LOG_LEVEL_DEBUG, _("\nReading Address:%x"),(actaddr)&255);
-	URJ_BUS_WRITE (bus, PSEUDOADDRESS+5, (actaddr>>8));
-	urj_log (URJ_LOG_LEVEL_DEBUG, _("%x\n"),(actaddr>>8));
-	URJ_BUS_READ_START (bus, PSEUDOADDRESS);
-	for (int j=0;j<PAGEINBLOCK;j++){ //with the chip we can sequential read a whole block
+	URJ_BUS_WRITE (bus, PSEUDOADDRESS+5, (actaddr));
+	urj_log (URJ_LOG_LEVEL_NORMAL, _("\nReading Address:%x"),(actaddr));
+	URJ_BUS_WRITE (bus, PSEUDOADDRESS+5, (actaddr)/256);
+	urj_log (URJ_LOG_LEVEL_NORMAL, _("\nReading add2:%x\n"),(actaddr)/256);
+	usleep(10);//unhardcode this
+	if (URJ_BUS_READ_START (bus, PSEUDOADDRESS) !=URJ_STATUS_OK)
+		return URJ_STATUS_FAIL;
+	for (int j=0;j<PAGEINBLOCK;j++){ //with the chip we can sequentially read a whole block
 		for(int i=1;i<BSIZE;i++){
-			b[i-1] = URJ_BUS_READ_NEXT (bus, i);
+			b[(i-1)+j*BSIZE] = URJ_BUS_READ_NEXT (bus, PSEUDOADDRESS);
 		}
 		usleep(READPAGESLEEP);
 	}
-	b[BSIZE-1] = URJ_BUS_READ_END (bus);
+	b[PAGEINBLOCK*BSIZE-1] = URJ_BUS_READ_END (bus);
 	return 0;
 }

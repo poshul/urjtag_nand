@@ -15,7 +15,7 @@
 /*
  * Calculate 3 byte ECC code for 256 byte block
  */
-void nand_calculate_ecc (const unsigned char *dat, unsigned char *ecc_code);
+int nand_calculate_ecc (const unsigned char *dat, unsigned char *ecc_code);
 
 /*
  * Detect and correct a 1 bit error for 256 byte block

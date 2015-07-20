@@ -29,6 +29,7 @@
 #include <string.h>
 #include <errno.h>
 
+#include <urjtag/readnand.h>
 #include <urjtag/error.h>
 #include <urjtag/bus.h>
 
@@ -68,7 +69,7 @@ cmd_readnand_run (urj_chain_t *chain, char *params[])
         urj_error_IO_set (_("Unable to create file `%s'"), params[3]);
         return URJ_STATUS_FAIL;
     }
-    r = urj_bus_readmem (urj_bus, f, adr, len);
+    r = urj_bus_readnand (urj_bus, f, adr, len);
     fclose (f);
 
     return r;
